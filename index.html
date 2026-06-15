@@ -2,328 +2,158 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Dino Runner Desert Adventure</title>
-
+<title>Final Dino Runner</title>
 <style>
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background: #f5f5f5;
-}
-
-#rules {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background: white;
-    border: 2px solid black;
-    padding: 10px;
-    text-align: left;
-    font-size: 14px;
-    border-radius: 10px;
-}
-
-#score, #lives {
-    font-size: 24px;
-    margin: 5px;
-}
-
-#message {
-    font-size: 32px;
-    font-weight: bold;
-    min-height: 50px;
-}
-
-#oops {
-    font-size: 28px;
-    font-weight: bold;
-    color: red;
-    height: 40px;
-}
-
-#restartBtn {
-    display: none;
-    padding: 10px 20px;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-#game {
-    width: 800px;
-    height: 300px;
-    margin: 20px auto;
-    border: 3px solid black;
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(
-        to bottom,
-        #87CEEB 0%,
-        #87CEEB 75%,
-        #E8C27D 75%,
-        #E8C27D 100%
-    );
-}
-
-#sun {
-    position: absolute;
-    top: 20px;
-    right: 40px;
-    font-size: 50px;
-}
-
-#dune1, #dune2 {
-    position: absolute;
-    bottom: 0;
-    background: #D9B56D;
-    border-radius: 50%;
-}
-
-#dune1 {
-    width: 220px;
-    height: 60px;
-    left: 80px;
-}
-
-#dune2 {
-    width: 260px;
-    height: 80px;
-    left: 500px;
-}
-
-#ground {
-    width: 100%;
-    height: 5px;
-    background: #654321;
-    position: absolute;
-    bottom: 0;
-}
-
-#dino {
-    position: absolute;
-    left: 40px;
-    bottom: 5px;
-    font-size: 50px;
-    user-select: none;
-    transform: scaleX(-1);
-}
-
-#cactus {
-    position: absolute;
-    left: 800px;
-    bottom: 5px;
-    font-size: 50px;
-    user-select: none;
-}
+body{font-family:Arial;text-align:center;background:#f5f5f5}
+#rules{position:fixed;top:10px;right:10px;background:white;border:2px solid #000;padding:10px;text-align:left}
+#game{width:900px;height:320px;margin:20px auto;position:relative;overflow:hidden;border:3px solid #000;
+background:linear-gradient(to bottom,#87CEEB 0%,#87CEEB 75%,#E8C27D 75%,#E8C27D 100%);}
+#sun{position:absolute;top:15px;right:30px;font-size:48px}
+.dune{position:absolute;bottom:0;background:#D9B56D;border-radius:50%}
+#d1{width:220px;height:60px;left:80px} #d2{width:260px;height:80px;left:500px}
+#ground{position:absolute;bottom:0;height:5px;width:100%;background:#654321}
+#dino{position:absolute;left:60px;bottom:5px;font-size:52px;transform:scaleX(-1)}
+.cactus{position:absolute;bottom:5px;font-size:48px}
+#message{font-size:28px;font-weight:bold;min-height:40px}
+#oops{font-size:24px;color:red;height:30px}
+button{padding:10px 20px;font-size:18px;display:none}
 </style>
 </head>
-
 <body>
-
 <div id="rules">
-<b>📋 Rules</b><br>
-• Press SPACE or ↑ to jump<br>
-• Avoid the cactus 🌵<br>
-• You have 3 lives ❤️<br>
-• The cactus gets faster! ⚡
+<b>Rules</b><br>
+Space/↑ = Jump<br>
+Double jump allowed<br>
+Avoid cacti 🌵<br>
+3 lives ❤️
 </div>
 
-<h1>🦖 Dino Runner Desert Adventure</h1>
-
+<h1>🦖 Final Dino Runner</h1>
 <div id="score">Score: 0</div>
+<div id="best">Best Score: 0</div>
 <div id="lives">Lives: 3</div>
-
+<div id="jumps">Jumps Left: 2</div>
 <div id="message"></div>
 <div id="oops"></div>
-
-<button id="restartBtn">🔄 Try Again</button>
+<button id="restart">🔄 Try Again</button>
 
 <div id="game">
-
-    <div id="sun">☀️</div>
-
-    <div id="dune1"></div>
-    <div id="dune2"></div>
-
-    <div id="dino">🦖</div>
-    <div id="cactus">🌵</div>
-
-    <div id="ground"></div>
-
+<div id="sun">☀️</div>
+<div id="d1" class="dune"></div>
+<div id="d2" class="dune"></div>
+<div id="dino">🦖</div>
+<div class="cactus">🌵</div>
+<div class="cactus">🌵</div>
+<div class="cactus">🌵</div>
+<div id="ground"></div>
 </div>
 
-<p>Press SPACE or ↑ Arrow to jump!</p>
-
 <script>
-const dino = document.getElementById("dino");
-const cactus = document.getElementById("cactus");
-const scoreText = document.getElementById("score");
-const livesText = document.getElementById("lives");
-const message = document.getElementById("message");
-const oops = document.getElementById("oops");
-const restartBtn = document.getElementById("restartBtn");
+const dino=document.getElementById("dino");
+const cacti=document.querySelectorAll(".cactus");
+const scoreEl=document.getElementById("score");
+const bestEl=document.getElementById("best");
+const livesEl=document.getElementById("lives");
+const jumpsEl=document.getElementById("jumps");
+const msg=document.getElementById("message");
+const oops=document.getElementById("oops");
+const restart=document.getElementById("restart");
 
-let score = 0;
-let lives = 3;
-let cactusX = 800;
-let cactusSpeed = 7;
-let jumping = false;
-let invincible = false;
-let cactusPaused = false;
-let gameOver = false;
+let score=0,lives=3,gameOver=false;
+let best=Number(localStorage.getItem("bestScore"))||0;
+bestEl.textContent="Best Score: "+best;
 
-/* Music */
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let cactusSpeed=7;
+let positions=[900,1200,1350];
 
-function playNote(freq, duration) {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
+let jumpCount=0,velocity=0,dinoY=5;
+let invincible=false,cactusPaused=false;
 
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    osc.frequency.value = freq;
-    osc.type = "triangle";
-    gain.gain.value = 0.03;
-
-    osc.start();
-
-    setTimeout(() => {
-        osc.stop();
-    }, duration);
+const AudioCtx=window.AudioContext||window.webkitAudioContext;
+const audioCtx=new AudioCtx();
+let musicStarted=false;
+function note(f,d){
+ const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+ o.connect(g);g.connect(audioCtx.destination);
+ o.frequency.value=f;o.type="triangle";g.gain.value=0.02;
+ o.start();setTimeout(()=>o.stop(),d);
+}
+function startMusic(){
+ if(musicStarted) return;
+ musicStarted=true;
+ const melody=[330,392,440,392,349,392,523,440];
+ let i=0;
+ setInterval(()=>{ note(melody[i],160); i=(i+1)%melody.length; },220);
 }
 
-let musicStarted = false;
-
-function startMusic() {
-    if (musicStarted) return;
-
-    musicStarted = true;
-
-    setInterval(() => {
-        playNote(262, 180);
-        setTimeout(() => playNote(330, 180), 250);
-        setTimeout(() => playNote(392, 180), 500);
-    }, 1000);
+function jump(){
+ if(gameOver) return;
+ startMusic();
+ if(jumpCount<2){ velocity=11; jumpCount++; }
 }
-
-// Jump
-function jump() {
-    if (jumping || gameOver) return;
-
-    startMusic();
-
-    jumping = true;
-    let height = 5;
-
-    const up = setInterval(() => {
-        height += 6;
-        dino.style.bottom = height + "px";
-
-        if (height >= 140) {
-            clearInterval(up);
-
-            const down = setInterval(() => {
-                height -= 6;
-                dino.style.bottom = height + "px";
-
-                if (height <= 5) {
-                    dino.style.bottom = "5px";
-                    clearInterval(down);
-                    jumping = false;
-                }
-            }, 20);
-        }
-    }, 20);
-}
-
-// Controls
-document.addEventListener("keydown", (e) => {
-    if (e.code === "Space" || e.code === "ArrowUp") {
-        jump();
-    }
+document.addEventListener("keydown",e=>{
+ if(e.code==="Space"||e.code==="ArrowUp") jump();
 });
 
-// Restart
-restartBtn.addEventListener("click", () => {
-    score = 0;
-    lives = 3;
-    cactusX = 800;
-    cactusSpeed = 7;
-    gameOver = false;
-    invincible = false;
-    cactusPaused = false;
+restart.onclick=()=>{
+ score=0;lives=3;gameOver=false;cactusSpeed=7;
+ positions=[900,1200,1350];
+ scoreEl.textContent="Score: 0";
+ livesEl.textContent="Lives: 3";
+ msg.textContent=""; oops.textContent="";
+ restart.style.display="none";
+};
 
-    scoreText.textContent = "Score: 0";
-    livesText.textContent = "Lives: 3";
-    message.textContent = "";
-    oops.textContent = "";
+setInterval(()=>{
+ if(gameOver) return;
 
-    restartBtn.style.display = "none";
-});
+ velocity-=0.7;
+ dinoY+=velocity;
+ if(dinoY<5){ dinoY=5; velocity=0; jumpCount=0; }
+ dino.style.bottom=dinoY+"px";
+ jumpsEl.textContent="Jumps Left: "+(2-jumpCount);
 
-// Main Game Loop
-setInterval(() => {
+ for(let i=0;i<cacti.length;i++){
+   if(!cactusPaused) positions[i]-=cactusSpeed;
+   cacti[i].style.left=positions[i]+"px";
 
-    if (gameOver) return;
+   if(positions[i] < -60){
+      positions[i]=900 + Math.random()*400;
+      score++;
+      scoreEl.textContent="Score: "+score;
 
-    if (!cactusPaused) {
-        cactusX -= cactusSpeed;
-    }
+      if(score>best){
+        best=score;
+        localStorage.setItem("bestScore",best);
+        bestEl.textContent="Best Score: "+best;
+      }
 
-    cactus.style.left = cactusX + "px";
+      if(score % 3 === 0) cactusSpeed+=1;
+   }
 
-    // Score
-    if (cactusX < -60) {
-        cactusX = 800;
+   if(positions[i]>30 && positions[i]<95 && dinoY<60 && !invincible){
+      lives--;
+      livesEl.textContent="Lives: "+lives;
+      oops.textContent="😵 Oops!";
 
-        score++;
-        scoreText.textContent = "Score: " + score;
+      setTimeout(()=>oops.textContent="",800);
 
-        // Speed up every 3 points
-        if (score % 3 === 0) {
-            cactusSpeed += 1;
-        }
-    }
+      invincible=true;
+      cactusPaused=true;
 
-    const dinoBottom =
-        parseInt(window.getComputedStyle(dino).bottom);
+      setTimeout(()=>cactusPaused=false,500);
+      setTimeout(()=>invincible=false,1000);
 
-    // Collision
-    if (
-        cactusX > 20 &&
-        cactusX < 90 &&
-        dinoBottom < 55 &&
-        !invincible
-    ) {
-        lives--;
-        livesText.textContent = "Lives: " + lives;
-
-        oops.textContent = "😵 Oops!";
-
-        setTimeout(() => {
-            oops.textContent = "";
-        }, 1000);
-
-        invincible = true;
-        cactusPaused = true;
-
-        setTimeout(() => {
-            cactusPaused = false;
-        }, 500);
-
-        setTimeout(() => {
-            invincible = false;
-        }, 1000);
-
-        if (lives <= 0) {
-            message.textContent = "😢 Oh no! You lost!";
-            restartBtn.style.display = "inline-block";
-            gameOver = true;
-        }
-    }
-
-}, 20);
+      if(lives<=0){
+        msg.textContent="😢 Oh no! You lost!";
+        restart.style.display="inline-block";
+        gameOver=true;
+      }
+      break;
+   }
+ }
+},20);
 </script>
-
 </body>
 </html>
+

@@ -93,6 +93,11 @@ const oops=document.getElementById("oops");
 const restart=document.getElementById("restart");
  const startScreen = document.getElementById("startScreen");
 const startBtn = document.getElementById("startBtn");
+ startBtn.addEventListener("click", () => {
+    gameStarted = true;
+    startScreen.style.display = "none";
+    startMusic();
+});
 
 let gameStarted = false;
 

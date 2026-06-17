@@ -82,133 +82,251 @@ Avoid cacti 🌵<br>
 </div>
 
 <script>
-const dino=document.getElementById("dino");
-const cacti=document.querySelectorAll(".cactus");
-const scoreEl=document.getElementById("score");
-const bestEl=document.getElementById("best");
-const livesEl=document.getElementById("lives");
-const jumpsEl=document.getElementById("jumps");
-const msg=document.getElementById("message");
-const oops=document.getElementById("oops");
-const restart=document.getElementById("restart");
- const startScreen = document.getElementById("startScreen");
+<script>
+const dino = document.getElementById("dino");
+const cacti = document.querySelectorAll(".cactus");
+
+const scoreEl = document.getElementById("score");
+const bestEl = document.getElementById("best");
+const livesEl = document.getElementById("lives");
+const jumpsEl = document.getElementById("jumps");
+
+const msg = document.getElementById("message");
+const oops = document.getElementById("oops");
+
+const restart = document.getElementById("restart");
+
+const startScreen = document.getElementById("startScreen");
 const startBtn = document.getElementById("startBtn");
- window.onload = () => {
-    const startBtn = document.getElementById("startBtn");
-    const startScreen = document.getElementById("startScreen");
-};
- startBtn.addEventListener("click", () => {
-    gameStarted = true;
-    startScreen.style.display = "none";
-    startMusic();
-});
 
 let gameStarted = false;
+let gameOver = false;
 
-let score=0,lives=3,gameOver=false;
-let best=Number(localStorage.getItem("bestScore"))||0;
-bestEl.textContent="Best Score: "+best;
+let score = 0;
+let lives = 3;
 
-let cactusSpeed=7;
-let positions=[900,1200,1350];
+let cactusSpeed = 7;
+let positions = [900, 1200, 1500];
 
-let jumpCount=0,velocity=0,dinoY=5;
-let invincible=false,cactusPaused=false;
+let jumpCount = 0;
+let velocity = 0;
+let dinoY = 5;
 
-const AudioCtx=window.AudioContext||window.webkitAudioContext;
-const audioCtx=new AudioCtx();
-let musicStarted=false;
-function note(f,d){
- const o=audioCtx.createOscillator(),g=audioCtx.createGain();
- o.connect(g);g.connect(audioCtx.destination);
- o.frequency.value=f;o.type="triangle";g.gain.value=0.02;
- o.start();setTimeout(()=>o.stop(),d);
+let invincible = false;
+let cactusPaused = false;
+
+let best = Number(localStorage.getItem("bestScore")) || 0;
+bestEl.textContent = "Best Score: " + best;
+
+restart.style.display = "none";
+
+/* ---------- SOUND ---------- */
+
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioCtx();
+
+let musicStarted = false;
+
+function note(freq, duration) {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.frequency.value = freq;
+    osc.type = "triangle";
+    gain.gain.value = 0.02;
+
+    osc.start();
+
+    setTimeout(() => {
+        osc.stop();
+    }, duration);
 }
-function startMusic(){
- startBtn.addEventListener("click", () => {
+
+function startMusic() {
+    if (musicStarted) return;
+
+    musicStarted = true;
+
+    const melody = [262, 330, 392, 523];
+
+    setInterval(() => {
+        note(
+            melody[Math.floor(Math.random() * melody.length)],
+            180
+        );
+    }, 700);
+}
+
+/* ---------- START BUTTON ---------- */
+
+startBtn.addEventListener("click", () => {
     gameStarted = true;
     startScreen.style.display = "none";
+
+    if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+    }
+
     startMusic();
 });
-function jump(){
- if(gameOver) return;
- startMusic();
- if(jumpCount<2){ velocity=11; jumpCount++; }
+
+/* ---------- JUMP ---------- */
+
+function jump() {
+    if (!gameStarted) return;
+    if (gameOver) return;
+
+    if (jumpCount < 2) {
+        velocity = 11;
+        jumpCount++;
+    }
 }
+
 document.addEventListener("keydown", (e) => {
-    if (e.code === "Space") {
-        jump();
-    }
-});
- document.addEventListener("touchstart", () => {
-    if (gameStarted) {
+    if (e.code === "Space" || e.code === "ArrowUp") {
         jump();
     }
 });
 
-document.addEventListener("touchstart", () => {
-    jump();
-});
+document.addEventListener(
+    "touchstart",
+    (e) => {
+        if (gameStarted) {
+            e.preventDefault();
+            jump();
+        }
+    },
+    { passive: false }
+);
 
-restart.onclick=()=>{
- score=0;lives=3;gameOver=false;cactusSpeed=7;
- positions=[900,1200,1350];
- scoreEl.textContent="Score: 0";
- livesEl.textContent="Lives: 3";
- msg.textContent=""; oops.textContent="";
- restart.style.display="none";
+/* ---------- RESTART ---------- */
+
+restart.onclick = () => {
+    score = 0;
+    lives = 3;
+    gameOver = false;
+
+    cactusSpeed = 7;
+    positions = [900, 1200, 1500];
+
+    jumpCount = 0;
+    velocity = 0;
+    dinoY = 5;
+
+    scoreEl.textContent = "Score: 0";
+    livesEl.textContent = "Lives: 3";
+    jumpsEl.textContent = "Jumps Left: 2";
+
+    msg.textContent = "";
+    oops.textContent = "";
+
+    restart.style.display = "none";
 };
 
-setInterval(()=>{
- if (!gameStarted) return;
- if(gameOver) return;
+/* ---------- GAME LOOP ---------- */
 
- velocity-=0.7;
- dinoY+=velocity;
- if(dinoY<5){ dinoY=5; velocity=0; jumpCount=0; }
- dino.style.bottom=dinoY+"px";
- jumpsEl.textContent="Jumps Left: "+(2-jumpCount);
+setInterval(() => {
 
- for(let i=0;i<cacti.length;i++){
-   if(!cactusPaused) positions[i]-=cactusSpeed;
-   cacti[i].style.left=positions[i]+"px";
+    if (!gameStarted) return;
+    if (gameOver) return;
 
-   if(positions[i] < -60){
-      positions[i]=900 + Math.random()*400;
-      score++;
-      scoreEl.textContent="Score: "+score;
+    velocity -= 0.7;
+    dinoY += velocity;
 
-      if(score>best){
-        best=score;
-        localStorage.setItem("bestScore",best);
-        bestEl.textContent="Best Score: "+best;
-      }
+    if (dinoY < 5) {
+        dinoY = 5;
+        velocity = 0;
+        jumpCount = 0;
+    }
 
-      if(score % 3 === 0) cactusSpeed+=1;
-   }
+    dino.style.bottom = dinoY + "px";
 
-   if(positions[i]>30 && positions[i]<95 && dinoY<60 && !invincible){
-      lives--;
-      livesEl.textContent="Lives: "+lives;
-      oops.textContent="😵 Oops!";
+    jumpsEl.textContent =
+        "Jumps Left: " + (2 - jumpCount);
 
-      setTimeout(()=>oops.textContent="",800);
+    for (let i = 0; i < cacti.length; i++) {
 
-      invincible=true;
-      cactusPaused=true;
+        if (!cactusPaused) {
+            positions[i] -= cactusSpeed;
+        }
 
-      setTimeout(()=>cactusPaused=false,500);
-      setTimeout(()=>invincible=false,1000);
+        cacti[i].style.left = positions[i] + "px";
 
-      if(lives<=0){
-        msg.textContent="😢 Oh no! You lost!";
-        restart.style.display="inline-block";
-        gameOver=true;
-      }
-      break;
-   }
- }
-},20);
+        if (positions[i] < -60) {
+
+            positions[i] = 900 + Math.random() * 500;
+
+            score++;
+
+            scoreEl.textContent =
+                "Score: " + score;
+
+            if (score > best) {
+                best = score;
+
+                localStorage.setItem(
+                    "bestScore",
+                    best
+                );
+
+                bestEl.textContent =
+                    "Best Score: " + best;
+            }
+
+            if (score % 3 === 0) {
+                cactusSpeed += 1;
+            }
+        }
+
+        if (
+            positions[i] > 30 &&
+            positions[i] < 95 &&
+            dinoY < 60 &&
+            !invincible
+        ) {
+
+            lives--;
+
+            livesEl.textContent =
+                "Lives: " + lives;
+
+            oops.textContent = "😵 Oops!";
+
+            setTimeout(() => {
+                oops.textContent = "";
+            }, 800);
+
+            invincible = true;
+            cactusPaused = true;
+
+            setTimeout(() => {
+                cactusPaused = false;
+            }, 500);
+
+            setTimeout(() => {
+                invincible = false;
+            }, 1000);
+
+            if (lives <= 0) {
+
+                msg.textContent =
+                    "😢 Oh no! You lost!";
+
+                restart.style.display =
+                    "inline-block";
+
+                gameOver = true;
+            }
+
+            break;
+        }
+    }
+
+}, 20);
+</script>
 </script>
 </body>
 </html>

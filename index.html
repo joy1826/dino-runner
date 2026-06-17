@@ -93,6 +93,15 @@ const oops=document.getElementById("oops");
 const restart=document.getElementById("restart");
  const startScreen = document.getElementById("startScreen");
 const startBtn = document.getElementById("startBtn");
+ window.onload = () => {
+    const startBtn = document.getElementById("startBtn");
+    const startScreen = document.getElementById("startScreen");
+
+    startBtn.addEventListener("click", () => {
+        gameStarted = true;
+        startScreen.style.display = "none";
+    });
+};
  startBtn.addEventListener("click", () => {
     gameStarted = true;
     startScreen.style.display = "none";

@@ -94,13 +94,7 @@ const msg = document.getElementById("message");
 const oops = document.getElementById("oops");
 
 const restart = document.getElementById("restart");
-restart.addEventListener("touchstart", () => {
-    restart.click();
-});
- restart.addEventListener("touchstart", function(e){
-    e.preventDefault();
-    restart.onclick();
-});
+
 const startScreen = document.getElementById("startScreen");
 const startBtn = document.getElementById("startBtn");
 
@@ -205,15 +199,21 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-document.addEventListener(
+const game = document.getElementById("game");
+
+game.addEventListener(
     "touchstart",
     (e) => {
-        if (gameStarted) {
+        if (gameStarted && !gameOver) {
             e.preventDefault();
             jump();
         }
     },
     { passive: false }
+);
+        }
+    
+   
 );
 
 /* ---------- RESTART ---------- */

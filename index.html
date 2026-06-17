@@ -94,7 +94,13 @@ const msg = document.getElementById("message");
 const oops = document.getElementById("oops");
 
 const restart = document.getElementById("restart");
-
+restart.addEventListener("touchstart", () => {
+    restart.click();
+});
+ restart.addEventListener("touchstart", function(e){
+    e.preventDefault();
+    restart.onclick();
+});
 const startScreen = document.getElementById("startScreen");
 const startBtn = document.getElementById("startBtn");
 
@@ -117,7 +123,16 @@ let cactusPaused = false;
 let best = Number(localStorage.getItem("bestScore")) || 0;
 bestEl.textContent = "Best Score: " + best;
 
-restart.style.display = "none";
+#restart{
+    display:none;
+    position:fixed;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    z-index:2000;
+    padding:15px 30px;
+    font-size:24px;
+}
 
 /* ---------- SOUND ---------- */
 
@@ -222,7 +237,7 @@ restart.onclick = () => {
     msg.textContent = "";
     oops.textContent = "";
 
-    restart.style.display = "none";
+    restart.style.display = "inline-block";
 };
 
 /* ---------- GAME LOOP ---------- */

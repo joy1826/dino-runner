@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head> <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
 <title>Final Dino Runner</title>
 <style>
 body{font-family:Arial;text-align:center;background:#f5f5f5}
 #rules{position:fixed;top:10px;right:10px;background:white;border:2px solid #000;padding:10px;text-align:left}
-#game{width:900px;height:320px;margin:20px auto;position:relative;overflow:hidden;border:3px solid #000;
+#game{width:95vw;max-width:900px;height:320px;margin:20px auto;position:relative;overflow:hidden;border:3px solid #000;
 background:linear-gradient(to bottom,#87CEEB 0%,#87CEEB 75%,#E8C27D 75%,#E8C27D 100%);}
 #sun{position:absolute;top:15px;right:30px;font-size:48px}
 .dune{position:absolute;bottom:0;background:#D9B56D;border-radius:50%}
@@ -91,8 +91,14 @@ function jump(){
  startMusic();
  if(jumpCount<2){ velocity=11; jumpCount++; }
 }
-document.addEventListener("keydown",e=>{
- if(e.code==="Space"||e.code==="ArrowUp") jump();
+document.addEventListener("keydown", (e) => {
+    if (e.code === "Space") {
+        jump();
+    }
+});
+
+document.addEventListener("touchstart", () => {
+    jump();
 });
 
 restart.onclick=()=>{

@@ -43,7 +43,15 @@
     max-width:300px;
 }
 body{font-family:Arial;text-align:center;background:#f5f5f5}
-#rules{position:fixed;top:10px;right:10px;background:white;border:2px solid #000;padding:10px;text-align:left}
+#startRules{
+    background:white;
+    color:black;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px;
+    text-align:center;
+    max-width:300px;
+}
 #game{width:95vw;max-width:900px;height:320px;margin:20px auto;position:relative;overflow:hidden;border:3px solid #000;
 background:linear-gradient(to bottom,#87CEEB 0%,#87CEEB 75%,#E8C27D 75%,#E8C27D 100%);}
 #sun{position:absolute;top:15px;right:30px;font-size:48px}
@@ -62,14 +70,6 @@ button{padding:10px 20px;font-size:18px;}
 
 <div id="startScreen">
     <h1>🦖 Dino Runner</h1>
-
-    <div id="startRules">
-        <h3>Rules</h3>
-        <p>Space/↑ = Jump</p>
-        <p>Double jump allowed</p>
-        <p>Avoid cacti 🌵</p>
-        <p>3 lives ❤️</p>
-    </div>
 
     <button id="startBtn">▶ Tap to Start</button>
 </div>

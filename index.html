@@ -158,26 +158,26 @@ function startMusic() {
     }, 700);
 }
 
+
 /* ---------- START BUTTON ---------- */
 
 function startGame() {
     gameStarted = true;
     startScreen.style.display = "none";
-}
-
-startBtn.addEventListener("click", startGame);
-startBtn.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    startGame();
-});
 
     if (audioCtx.state === "suspended") {
         audioCtx.resume();
     }
 
     startMusic();
-});
+}
 
+startBtn.addEventListener("click", startGame);
+
+startBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    startGame();
+});
 /* ---------- JUMP ---------- */
 
 function jump() {
@@ -208,10 +208,9 @@ game.addEventListener(
     },
     { passive: false }
 );
-        }
     
-   
-);
+    
+  
 
 /* ---------- RESTART ---------- */
 
@@ -227,6 +226,9 @@ restart.onclick = () => {
     velocity = 0;
     dinoY = 5;
 
+    invincible = false;
+    cactusPaused = false;
+
     scoreEl.textContent = "Score: 0";
     livesEl.textContent = "Lives: 3";
     jumpsEl.textContent = "Jumps Left: 2";
@@ -234,9 +236,8 @@ restart.onclick = () => {
     msg.textContent = "";
     oops.textContent = "";
 
-    restart.style.display = "inline-block";
+    restart.style.display = "none";
 };
-
 /* ---------- GAME LOOP ---------- */
 
 setInterval(() => {

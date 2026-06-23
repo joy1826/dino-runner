@@ -47,8 +47,24 @@
 }
 body{font-family:Arial;text-align:center;background:#f5f5f5}
 
-}
 #game{width:95vw;max-width:900px;height:320px;margin:20px auto;position:relative;overflow:hidden;border:3px solid #000;
+ #game{
+    display:block;
+    width:95vw;
+    max-width:900px;
+    height:320px;
+    margin:20px auto;
+    position:relative;
+    overflow:hidden;
+    border:3px solid #000;
+    background:linear-gradient(
+        to bottom,
+        #87CEEB 0%,
+        #87CEEB 75%,
+        #E8C27D 75%,
+        #E8C27D 100%
+    );
+}
 background:linear-gradient(to bottom,#87CEEB 0%,#87CEEB 75%,#E8C27D 75%,#E8C27D 100%);}
 #sun{position:absolute;top:15px;right:30px;font-size:48px}
 .dune{position:absolute;bottom:0;background:#D9B56D;border-radius:50%}

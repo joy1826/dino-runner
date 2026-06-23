@@ -391,7 +391,10 @@ sun.style.top = sunY + "px";
 moon.style.top = moonY + "px";
     velocity -= 0.7;
     dinoY += velocity;
-
+moon.style.display = "block";
+sun.style.display = "none";
+moon.style.display = "none";
+sun.style.display = "block";
     if (dinoY < 5) {
         dinoY = 5;
         velocity = 0;

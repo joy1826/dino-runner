@@ -280,10 +280,12 @@ restart.onclick = () => {
     score = 0;
     lives = 3;
     gameOver = false;
-
+eaglePositions = [1300, 1700];
     cactusSpeed = 7;
     positions = [900, 1200, 1500];
-
+gameStarted = true;
+gameOver = false;
+isNight = false;
     jumpCount = 0;
     velocity = 0;
     dinoY = 5;
@@ -314,31 +316,27 @@ if(cycle % 2 === 1){
 else{
     isNight = false;
 }
- if(isNight){
+if (isNight) {
 
     document.getElementById("game").style.background =
-    "linear-gradient(to bottom,#081C3A 0%,#081C3A 75%,#333333 75%,#333333 100%)";
+        "linear-gradient(to bottom,#081C3A 0%,#081C3A 75%,#333333 75%,#333333 100%)";
 
-    if(sunY < 260){
-        sunY += 1;
-    }
+    sun.style.display = "none";
+    moon.style.display = "block";
 
-    if(moonY > 20){
-        moonY -= 1;
-    }
+    if (sunY < 260) sunY += 1;
+    if (moonY > 20) moonY -= 1;
 
-}else{
+} else {
 
     document.getElementById("game").style.background =
-    "linear-gradient(to bottom,#87CEEB 0%,#87CEEB 75%,#E8C27D 75%,#E8C27D 100%)";
+        "linear-gradient(to bottom,#87CEEB 0%,#87CEEB 75%,#E8C27D 75%,#E8C27D 100%)";
 
-    if(sunY > 15){
-        sunY -= 1;
-    }
+    sun.style.display = "block";
+    moon.style.display = "none";
 
-    if(moonY < 260){
-        moonY += 1;
-    }
+    if (sunY > 15) sunY -= 1;
+    if (moonY < 260) moonY += 1;
 }
  for(let i=0;i<eagles.length;i++){
 

@@ -75,6 +75,19 @@ background:linear-gradient(to bottom,#87CEEB 0%,#87CEEB 75%,#E8C27D 75%,#E8C27D 
 #message{font-size:28px;font-weight:bold;min-height:40px}
 #oops{font-size:24px;color:red;height:30px}
 button{padding:10px 20px;font-size:18px;}
+#moon{
+    position:absolute;
+    top:260px;
+    left:40px;
+    font-size:42px;
+}
+
+.eagle{
+    position:absolute;
+    font-size:40px;
+    top:100px;
+    left:1200px;
+}
 </style>
 </head>
 <body>
@@ -104,12 +117,15 @@ button{padding:10px 20px;font-size:18px;}
 
 <div id="game">
 <div id="sun">☀️</div>
+<div id="moon">🌙</div>
 <div id="d1" class="dune"></div>
 <div id="d2" class="dune"></div>
 <div id="dino">🦖</div>
 <div class="cactus">🌵</div>
 <div class="cactus">🌵</div>
 <div class="cactus">🌵</div>
+<div class="eagle">🦅</div>
+<div class="eagle">🦅</div>
 <div id="ground"></div>
 </div>
 
@@ -145,6 +161,17 @@ let dinoY = 5;
 
 let invincible = false;
 let cactusPaused = false;
+let isNight = false;
+
+let sunY = 15;
+let moonY = 260;
+
+let eaglePositions = [1300,1700];
+
+const sun = document.getElementById("sun");
+const moon = document.getElementById("moon");
+
+const eagles = document.querySelectorAll(".eagle");
 
 let best = Number(localStorage.getItem("bestScore")) || 0;
 bestEl.textContent = "Best Score: " + best;
@@ -216,10 +243,15 @@ function jump() {
     if (!gameStarted) return;
     if (gameOver) return;
 
-    if (jumpCount < 2) {
+   if(isNight){
+    velocity = 11;
+}
+else{
+    if(jumpCount < 2){
         velocity = 11;
         jumpCount++;
     }
+}
 }
 
 document.addEventListener("keydown", (e) => {
@@ -276,7 +308,89 @@ setInterval(() => {
 
     if (!gameStarted) return;
     if (gameOver) return;
+const cycle = Math.floor(score / 20);
 
+if(cycle % 2 === 1){
+    isNight = true;
+}
+else{
+    isNight = false;
+}
+ if(isNight){
+
+    document.getElementById("game").style.background =
+    "linear-gradient(to bottom,#081C3A 0%,#081C3A 75%,#333333 75%,#333333 100%)";
+
+    if(sunY < 260){
+        sunY += 1;
+    }
+
+    if(moonY > 20){
+        moonY -= 1;
+    }
+
+}else{
+
+    document.getElementById("game").style.background =
+    "linear-gradient(to bottom,#87CEEB 0%,#87CEEB 75%,#E8C27D 75%,#E8C27D 100%)";
+
+    if(sunY > 15){
+        sunY -= 1;
+    }
+
+    if(moonY < 260){
+        moonY += 1;
+    }
+}
+ for(let i=0;i<eagles.length;i++){
+
+    if(isNight){
+
+        eaglePositions[i] -= cactusSpeed + 3;
+
+        eagles[i].style.left =
+            eaglePositions[i] + "px";
+
+        if(eaglePositions[i] < -100){
+            eaglePositions[i] =
+                1200 + Math.random()*600;
+        }
+
+        if(
+            eaglePositions[i] > 40 &&
+            eaglePositions[i] < 110 &&
+            dinoY > 70 &&
+            !invincible
+        ){
+
+            lives--;
+
+            livesEl.textContent =
+                "Lives: " + lives;
+
+            invincible = true;
+
+            setTimeout(()=>{
+                invincible = false;
+            },1000);
+
+            if(lives <= 0){
+
+                msg.textContent =
+                    "😢 Eagles got you!";
+
+                restart.style.display =
+                    "inline-block";
+
+                gameOver = true;
+            }
+        }
+
+    }
+}
+
+sun.style.top = sunY + "px";
+moon.style.top = moonY + "px";
     velocity -= 0.7;
     dinoY += velocity;
 
@@ -288,8 +402,13 @@ setInterval(() => {
 
     dino.style.bottom = dinoY + "px";
 
+    if(isNight){
+    jumpsEl.textContent =
+        "🚀 Unlimited Air Jumps Mode";
+}else{
     jumpsEl.textContent =
         "Jumps Left: " + (2 - jumpCount);
+}
 
     for (let i = 0; i < cacti.length; i++) {
 

@@ -281,6 +281,9 @@ restart.onclick = () => {
     lives = 3;
     gameOver = false;
 eaglePositions = [1300, 1700];
+ for (let i = 0; i < eagles.length; i++) {
+    eagles[i].style.left = eaglePositions[i] + "px";
+}
     cactusSpeed = 7;
     positions = [900, 1200, 1500];
 gameStarted = true;
@@ -309,13 +312,19 @@ setInterval(() => {
     if (!gameStarted) return;
     if (gameOver) return;
 const cycle = Math.floor(score / 20);
+let newNight = (cycle % 2 === 1);
 
-if(cycle % 2 === 1){
-    isNight = true;
+if (newNight && !isNight) {
+    // give player 1 second safety when night starts
+    invincible = true;
+
+    setTimeout(() => {
+        invincible = false;
+    }, 1000);
 }
-else{
-    isNight = false;
-}
+
+isNight = newNight;
+
 if (isNight) {
 
     document.getElementById("game").style.background =
@@ -389,10 +398,7 @@ sun.style.top = sunY + "px";
 moon.style.top = moonY + "px";
     velocity -= 0.7;
     dinoY += velocity;
-moon.style.display = "block";
-sun.style.display = "none";
-moon.style.display = "none";
-sun.style.display = "block";
+
     if (dinoY < 5) {
         dinoY = 5;
         velocity = 0;

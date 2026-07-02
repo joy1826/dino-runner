@@ -86,6 +86,14 @@ button{padding:10px 20px;font-size:18px;}
     top:100px;
     left:1200px;
 }
+#warning {
+    font-size: 24px;
+    color: orange;
+    font-weight: bold;
+    height: 30px;
+}
+ warning.style.color = "yellow";
+warning.style.fontSize = "30px";
 </style>
 </head>
 <body>
@@ -110,6 +118,7 @@ button{padding:10px 20px;font-size:18px;}
 <div id="lives">Lives: 3</div>
 <div id="jumps">Jumps Left: 2</div>
 <div id="message"></div>
+ <div id="warning"></div>
 <div id="oops"></div>
 <button id="restart">🔄 Try Again</button>
 
@@ -143,7 +152,7 @@ const restart = document.getElementById("restart");
 
 const startScreen = document.getElementById("startScreen");
 const startBtn = document.getElementById("startBtn");
-
+const warning = document.getElementById("warning");
 let gameStarted = false;
 let gameOver = false;
 
@@ -315,7 +324,13 @@ const cycle = Math.floor(score / 20);
 let newNight = (cycle % 2 === 1);
 
 if (newNight && !isNight) {
-    // give player 1 second safety when night starts
+
+    warning.textContent = "⚠️ Night is coming!";
+
+    setTimeout(() => {
+        warning.textContent = "";
+    }, 1000);
+
     invincible = true;
 
     setTimeout(() => {

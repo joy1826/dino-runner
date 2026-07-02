@@ -320,9 +320,9 @@ setInterval(() => {
 
     if (!gameStarted) return;
     if (gameOver) return;
-const cycle = Math.floor(score / 20);
+const cycle = Math.floor((score + 1) / 20);
 let newNight = (cycle % 2 === 1);
-
+isNight = newNight;
 if (newNight && !isNight) {
 
     warning.textContent = "⚠️ Night is coming!";
@@ -338,7 +338,6 @@ if (newNight && !isNight) {
     }, 1000);
 }
 
-isNight = newNight;
 
 if (isNight) {
 
